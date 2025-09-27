@@ -48,7 +48,7 @@ def run_clair_api_processor(**context):
     env = os.environ.copy()
     env['CLAIR_URL'] = params['clair_url']
     env['CLAIR_TOKEN'] = params['clair_token']
-    env['PATH'] = '/Users/adelson/miniconda3/bin:/usr/local/bin:/usr/bin:/bin'
+    env['PATH'] = '/path/to/conda/bin:/usr/local/bin:/usr/bin:/bin'
     
     # Prepare the command
     cmd = [
@@ -62,7 +62,7 @@ def run_clair_api_processor(**context):
     ]
     
     # Change to the correct directory
-    working_dir = "/Users/adelson/Library/CloudStorage/GoogleDrive-adelson.dias@gmail.com/Meu Drive/Clair/clair-v044"
+    working_dir = "/path/to/clair/project"
     
     print("🚀 Starting Clair API processing...")
     print(f"📁 Input file: {params['data_file_path']}")
@@ -288,7 +288,7 @@ with DAG(
     catchup=False,
     params={
         'data_file_path': Param(
-            '/Users/adelson/Documents/mai-thomas/data/combined_chats.csv',
+            '/path/to/data/combined_chats.csv',
             type='string',
             description='Path to the combined CSV file from prep_chats DAG'
         ),
@@ -323,7 +323,7 @@ with DAG(
             description='Clair API access token'
         ),
         'recipient_email': Param(
-            'adelson.dias@gmail.com',
+            'recipient@example.com',
             type='string',
             description='Email address to receive the results (default: your email)'
         )

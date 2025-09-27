@@ -372,12 +372,12 @@ with DAG(
     catchup=False,
     params={
         'folder_path': Param(
-            '/Users/adelson/Documents/mai-thomas/VR_WC_Transcripts', 
+            '/path/to/csv/folder', 
             type='string', 
             description='Path to the folder containing CSV files to process'
         ),
         'output_folder': Param(
-            '/Users/adelson/Documents/mai-thomas/data', 
+            '/path/to/output/data', 
             type='string', 
             description='Path to the output folder for processed files'
         )

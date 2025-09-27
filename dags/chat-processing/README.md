@@ -18,7 +18,7 @@ Esta pasta contém DAGs do Airflow para processamento e análise de conversas/ch
 - ✅ Estatísticas detalhadas do processamento
 
 **Parâmetros (configuráveis na UI):**
-- `data_folder_path`: Caminho da pasta com arquivos CSV (padrão: `/Users/adelson/Documents/mai-thomas/VR_WC_Transcripts`)
+- `data_folder_path`: Caminho da pasta com arquivos CSV (padrão: `/path/to/your/csv/folder`)
 
 **Saídas:**
 - `data/processed_chats.xlsx` - Arquivo Excel com uma planilha por diálogo
@@ -35,12 +35,12 @@ Esta pasta contém DAGs do Airflow para processamento e análise de conversas/ch
 - ✅ Logs detalhados com progresso em tempo real
 
 **Parâmetros (configuráveis na UI):**
-- `data_file_path`: Caminho do arquivo CSV de entrada (padrão: `/Users/adelson/Documents/mai-thomas/data/combined_chats.csv`)
+- `data_file_path`: Caminho do arquivo CSV de entrada (padrão: `/path/to/your/data/combined_chats.csv`)
 - `dataset_lang`: Idioma do dataset (padrão: `EN`)
 - `topics_file`: Tópicos para análise (padrão: `default, artificial intelligence`)
 - `mode`: Modo de processamento (padrão: `ssrl`)
 - `n_groups`: Número de grupos (padrão: `-1` para todos)
-- `recipient_email`: Email do destinatário (padrão: `adelson.dias@gmail.com`)
+- `recipient_email`: Email do destinatário (padrão: `recipient@example.com`)
 
 **Variáveis de Ambiente:**
 - `CLAIR_URL`: URL da API Clair
@@ -74,8 +74,8 @@ Configure a conexão SMTP na interface do Airflow (Admin > Connections):
 
 ### Variáveis de Ambiente
 Para o `clair_api_processor.py`, configure as seguintes variáveis:
-- `CLAIR_URL`: `https://next-lab-test.bms.utwente.nl/chatBot/`
-- `CLAIR_TOKEN`: `ZMhoyTJQxNE`
+- `CLAIR_URL`: URL da API Clair
+- `CLAIR_TOKEN`: Token de autenticação
 
 ## 🚀 Como Executar
 

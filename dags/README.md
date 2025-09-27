@@ -26,7 +26,7 @@ Projetos para processamento e análise de conversas:
 ### Instalação
 ```bash
 # Clone o repositório
-git clone https://github.com/adaj/etl-airflow.git
+git clone https://github.com/username/etl-airflow.git
 cd etl-airflow
 
 # Instale as dependências
@@ -109,9 +109,9 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👨‍💻 Autor
 
-**Adelson D. de Araujo Jr**
-- GitHub: [@adaj](https://github.com/adaj)
-- Email: adelson.dias@gmail.com
+**Desenvolvedor**
+- GitHub: [@username](https://github.com/username)
+- Email: developer@example.com
 
 ---
 

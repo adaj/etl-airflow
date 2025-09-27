@@ -31,7 +31,7 @@ def send_email_with_connection(**context):
     sender_password = conn.password
     
     # Configurações do email
-    recipient_email = "adelson.dias@gmail.com"
+    recipient_email = "recipient@example.com"
     
     print(f"Usando servidor: {smtp_server}:{smtp_port}")
     print(f"Email remetente: {sender_email}")

@@ -304,7 +304,7 @@ with DAG(
             description='OpenWeatherMap API key (get free at openweathermap.org)'
         ),
         'recipient_email': Param(
-            'adelson.dias@gmail.com',
+            'recipient@example.com',
             type='string',
             description='Email address to receive the weather report'
         )

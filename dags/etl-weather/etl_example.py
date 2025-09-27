@@ -20,7 +20,7 @@ import fire
 import os
 
 class WeatherETL:
-    def __init__(self, city="São Paulo", email="adelson.dias@gmail.com", api_key=None):
+    def __init__(self, city="São Paulo", email="recipient@example.com", api_key=None):
         """
         Initialize the Weather ETL process
         
@@ -213,7 +213,7 @@ class WeatherETL:
         # Email configuration (using Gmail SMTP)
         smtp_server = "smtp.gmail.com"
         smtp_port = 587
-        sender_email = os.getenv('SENDER_EMAIL', 'adelson.dias@gmail.com')
+        sender_email = os.getenv('SENDER_EMAIL', 'sender@example.com')
         sender_password = os.getenv('SENDER_PASSWORD')  # App password
         
         if not sender_password:
@@ -271,7 +271,7 @@ class WeatherETL:
             print(f"❌ Erro no processo ETL: {e}")
             raise
 
-def main(city="São Paulo", email="adelson.dias@gmail.com", api_key=None):
+def main(city="São Paulo", email="recipient@example.com", api_key=None):
     """
     Main function to run the ETL process
     
