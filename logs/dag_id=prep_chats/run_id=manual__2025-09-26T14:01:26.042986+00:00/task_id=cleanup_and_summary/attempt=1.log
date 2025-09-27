@@ -1,0 +1,77 @@
+{"timestamp":"2025-09-26T14:01:32.418549","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-26T14:01:32.419268","level":"info","event":"Filling up the DagBag from /Users/adelson/airflow/dags/prep_chats.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-26T14:01:32.747745","level":"info","event":"NumExpr defaulting to 10 threads.","logger":"numexpr.utils"}
+{"timestamp":"2025-09-26T14:01:32.878577Z","level":"info","event":"============================================================","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.878633Z","level":"info","event":"PROCESSING SUMMARY","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.878655Z","level":"info","event":"============================================================","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900584Z","level":"info","event":"📊 DIALOGUE STATISTICS:","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900657Z","level":"info","event":"  Total dialogues processed: 52","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900679Z","level":"info","event":"  Total messages: 8132","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900696Z","level":"info","event":"  Average messages per dialogue: 156.4","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900717Z","level":"info","event":"  Standard deviation: 72.2","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900734Z","level":"info","event":"  Min messages in a dialogue: 42","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900750Z","level":"info","event":"  Max messages in a dialogue: 403","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900766Z","level":"info","event":"","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.900782Z","level":"info","event":"📋 PER DIALOGUE BREAKDOWN:","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.901029Z","level":"info","event":"  VR_WC_S11english: 166 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.901413Z","level":"info","event":"  VR_WC_S26english: 159 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.901836Z","level":"info","event":"  VR_WC_S7english: 276 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.902323Z","level":"info","event":"  VR_WC_S2english: 403 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.902649Z","level":"info","event":"  VR_WC_S20english_processed: 78 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.902956Z","level":"info","event":"  VR_WC_S23english: 76 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.903258Z","level":"info","event":"  VR_WC_S14english: 90 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.903614Z","level":"info","event":"  VR_WC_S18english_processed: 156 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.903973Z","level":"info","event":"  VR_WC_S4english_processed: 172 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.904320Z","level":"info","event":"  VR_WC_S17english_processed: 144 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.904678Z","level":"info","event":"  VR_WC_S12english_processed: 167 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.905008Z","level":"info","event":"  VR_WC_S19english: 117 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.905397Z","level":"info","event":"  VR_WC_S8english: 192 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.905954Z","level":"info","event":"  VR_WC_S29english: 102 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.906397Z","level":"info","event":"  VR_WC_S24english: 190 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.906779Z","level":"info","event":"  VR_WC_S13english: 184 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.907200Z","level":"info","event":"  VR_WC_S5english: 199 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.907599Z","level":"info","event":"  VR_WC_S16english_processed: 210 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.907990Z","level":"info","event":"  VR_WC_S16english: 210 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.908333Z","level":"info","event":"  VR_WC_S21english: 91 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.908731Z","level":"info","event":"  VR_WC_S5english_processed: 199 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.909146Z","level":"info","event":"  VR_WC_S13english_processed: 184 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.909522Z","level":"info","event":"  VR_WC_S24english_processed: 190 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.909895Z","level":"info","event":"  VR_WC_S19english_processed: 117 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.910217Z","level":"info","event":"  VR_WC_S21english_processed: 91 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.910581Z","level":"info","event":"  VR_WC_S9english_processed: 153 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.910913Z","level":"info","event":"  VR_WC_S22english_processed: 105 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.911243Z","level":"info","event":"  VR_WC_S22english: 105 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.911603Z","level":"info","event":"  VR_WC_S15english: 155 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.911995Z","level":"info","event":"  VR_WC_S3english: 218 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.912319Z","level":"info","event":"  VR_WC_S28english_processed: 75 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.912705Z","level":"info","event":"  VR_WC_S3english_processed: 218 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.913052Z","level":"info","event":"  VR_WC_S10english_processed: 146 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.913405Z","level":"info","event":"  VR_WC_S15english_processed: 155 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.913690Z","level":"info","event":"  VR_WC_S6english_processed: 42 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.914036Z","level":"info","event":"  VR_WC_S18english: 156 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.914322Z","level":"info","event":"  VR_WC_S6english: 42 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.914671Z","level":"info","event":"  VR_WC_S10english: 146 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.915009Z","level":"info","event":"  VR_WC_S17english: 144 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.915373Z","level":"info","event":"  VR_WC_S11english_processed: 166 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.915677Z","level":"info","event":"  VR_WC_S20english: 78 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.916162Z","level":"info","event":"  VR_WC_S2english_processed: 403 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.916487Z","level":"info","event":"  VR_WC_S29english_processed: 102 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.916908Z","level":"info","event":"  VR_WC_S7english_processed: 276 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.917213Z","level":"info","event":"  VR_WC_S14english_processed: 90 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.917518Z","level":"info","event":"  VR_WC_S23english_processed: 76 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.917884Z","level":"info","event":"  VR_WC_S8english_processed: 192 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.918240Z","level":"info","event":"  VR_WC_S26english_processed: 159 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.918542Z","level":"info","event":"  VR_WC_S28english: 75 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.918886Z","level":"info","event":"  VR_WC_S9english: 153 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919246Z","level":"info","event":"  VR_WC_S4english: 172 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919597Z","level":"info","event":"  VR_WC_S12english: 167 messages, 5 columns","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919615Z","level":"info","event":"","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919637Z","level":"info","event":"📁 OUTPUT FILES:","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919655Z","level":"info","event":"  ✓ Excel file: /Users/adelson/Documents/mai-thomas/data/processed_chats.xlsx","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919670Z","level":"info","event":"    File size: 0.37 MB","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919686Z","level":"info","event":"  ✓ Combined CSV file: /Users/adelson/Documents/mai-thomas/data/combined_chats.csv","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919701Z","level":"info","event":"    File size: 0.72 MB","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919716Z","level":"info","event":"============================================================","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919731Z","level":"info","event":"Processing completed successfully!","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919746Z","level":"info","event":"============================================================","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T14:01:32.919687","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}

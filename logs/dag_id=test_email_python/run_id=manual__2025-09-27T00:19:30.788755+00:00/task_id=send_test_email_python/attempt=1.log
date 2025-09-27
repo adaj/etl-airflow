@@ -1,0 +1,52 @@
+{"timestamp":"2025-09-27T00:19:32.426314","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-27T00:19:32.426604","level":"info","event":"Filling up the DagBag from /Users/adelson/airflow/dags/test_email_python.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-27T00:19:32.460323Z","level":"info","event":"Conectando ao servidor SMTP: smtp.gmail.com:587","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-27T00:19:32.985017Z","level":"info","event":"Iniciando TLS...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-27T00:19:32.985329Z","level":"error","event":"send: 'ehlo eduvpn108070.mobiel.utwente.nl\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.251505Z","level":"error","event":"reply: b'250-smtp.gmail.com at your service, [2001:67c:2564:ad00::8:46]\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.251810Z","level":"error","event":"reply: b'250-SIZE 35882577\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.251880Z","level":"error","event":"reply: b'250-8BITMIME\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.251926Z","level":"error","event":"reply: b'250-STARTTLS\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.251965Z","level":"error","event":"reply: b'250-ENHANCEDSTATUSCODES\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.252008Z","level":"error","event":"reply: b'250-PIPELINING\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.252048Z","level":"error","event":"reply: b'250-CHUNKING\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.252088Z","level":"error","event":"reply: b'250 SMTPUTF8\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.252222Z","level":"error","event":"reply: retcode (250); Msg: b'smtp.gmail.com at your service, [2001:67c:2564:ad00::8:46]\\nSIZE 35882577\\n8BITMIME\\nSTARTTLS\\nENHANCEDSTATUSCODES\\nPIPELINING\\nCHUNKING\\nSMTPUTF8'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.252268Z","level":"error","event":"send: 'STARTTLS\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.512691Z","level":"error","event":"reply: b'220 2.0.0 Ready to start TLS\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.513106Z","level":"error","event":"reply: retcode (220); Msg: b'2.0.0 Ready to start TLS'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.778613Z","level":"info","event":"Fazendo login...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-27T00:19:33.778856Z","level":"error","event":"send: 'ehlo eduvpn108070.mobiel.utwente.nl\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310137Z","level":"error","event":"reply: b'250-smtp.gmail.com at your service, [2001:67c:2564:ad00::8:46]\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310238Z","level":"error","event":"reply: b'250-SIZE 35882577\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310265Z","level":"error","event":"reply: b'250-8BITMIME\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310286Z","level":"error","event":"reply: b'250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310335Z","level":"error","event":"reply: b'250-ENHANCEDSTATUSCODES\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310355Z","level":"error","event":"reply: b'250-PIPELINING\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310372Z","level":"error","event":"reply: b'250-CHUNKING\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310389Z","level":"error","event":"reply: b'250 SMTPUTF8\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310406Z","level":"error","event":"reply: retcode (250); Msg: b'smtp.gmail.com at your service, [2001:67c:2564:ad00::8:46]\\nSIZE 35882577\\n8BITMIME\\nAUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH\\nENHANCEDSTATUSCODES\\nPIPELINING\\nCHUNKING\\nSMTPUTF8'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.310436Z","level":"error","event":"send: 'AUTH PLAIN AGFkZWxzb24uZGlhc0BnbWFpbC5jb20AY3FqYXlpdmd2YXZ6a3d3ZQ==\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.765850Z","level":"error","event":"reply: b'235 2.7.0 Accepted\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.766191Z","level":"error","event":"reply: retcode (235); Msg: b'2.7.0 Accepted'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.766427Z","level":"info","event":"Enviando email...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-27T00:19:34.767439Z","level":"error","event":"send: 'mail FROM:<adelson.dias@gmail.com> size=645\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.036480Z","level":"error","event":"reply: b'250 2.1.0 OK a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.036675Z","level":"error","event":"reply: retcode (250); Msg: b'2.1.0 OK a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.036809Z","level":"error","event":"send: 'rcpt TO:<adelson.dias@gmail.com>\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.304201Z","level":"error","event":"reply: b'250 2.1.5 OK a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.304611Z","level":"error","event":"reply: retcode (250); Msg: b'2.1.5 OK a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.304766Z","level":"error","event":"send: 'data\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.775754Z","level":"error","event":"reply: b'354 Go ahead a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.776070Z","level":"error","event":"reply: retcode (354); Msg: b'Go ahead a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.776194Z","level":"error","event":"data: (354, b'Go ahead a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp')","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:35.776407Z","level":"error","event":"send: b'Content-Type: multipart/mixed; boundary=\"===============4912241352360001023==\"\\r\\nMIME-Version: 1.0\\r\\nFrom: adelson.dias@gmail.com\\r\\nTo: adelson.dias@gmail.com\\r\\nSubject: Teste de Email - Airflow (PythonOperator)\\r\\n\\r\\n--===============4912241352360001023==\\r\\nContent-Type: text/html; charset=\"utf-8\"\\r\\nMIME-Version: 1.0\\r\\nContent-Transfer-Encoding: base64\\r\\n\\r\\nCiAgICA8aDM+4pyFIEVtYWlsIGZ1bmNpb25hbmRvITwvaDM+CiAgICA8cD5TZSB2b2PDqiByZWNl\\r\\nYmV1IGVzdGUgZW1haWwsIGEgY29uZmlndXJhw6fDo28gZXN0w6EgY29ycmV0YS48L3A+CiAgICA8\\r\\ncD5Fc3RlIGVtYWlsIGZvaSBlbnZpYWRvIHVzYW5kbyBQeXRob25PcGVyYXRvciBkaXJldGFtZW50\\r\\nZS48L3A+CiAgICA=\\r\\n\\r\\n--===============4912241352360001023==--\\r\\n.\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.619766Z","level":"error","event":"reply: b'250 2.0.0 OK  1758932376 a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.620224Z","level":"error","event":"reply: retcode (250); Msg: b'2.0.0 OK  1758932376 a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.620388Z","level":"error","event":"data: (250, b'2.0.0 OK  1758932376 a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp')","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.620634Z","level":"error","event":"send: 'quit\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.887075Z","level":"error","event":"reply: b'221 2.0.0 closing connection a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp\\r\\n'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.887511Z","level":"error","event":"reply: retcode (221); Msg: b'2.0.0 closing connection a640c23a62f3a-b36f410e129sm316338966b.89 - gsmtp'","chan":"stderr","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.887831Z","level":"info","event":"✅ Email enviado com sucesso!","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-27T00:19:36.887948","level":"info","event":"Done. Returned value was: Email enviado com sucesso!","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}
+{"timestamp":"2025-09-27T00:19:36.888440","level":"info","event":"Pushing xcom","ti":"RuntimeTaskInstance(id=UUID('0199888a-0576-72a2-99fe-eaec06080b64'), task_id='send_test_email_python', dag_id='test_email_python', run_id='manual__2025-09-27T00:19:30.788755+00:00', try_number=1, map_index=-1, hostname='eduvpn108070.mobiel.utwente.nl', context_carrier=None, task=<Task(PythonOperator): send_test_email_python>, bundle_instance=LocalDagBundle(name=dags-folder), max_tries=0, start_date=datetime.datetime(2025, 9, 27, 0, 19, 32, 39753, tzinfo=datetime.timezone.utc), end_date=None, state=<TaskInstanceState.RUNNING: 'running'>, is_mapped=False, rendered_map_index=None, log_url='http://localhost:8080/dags/test_email_python/runs/manual__2025-09-27T00%3A19%3A30.788755%2B00%3A00/tasks/send_test_email_python?try_number=1')","logger":"task"}

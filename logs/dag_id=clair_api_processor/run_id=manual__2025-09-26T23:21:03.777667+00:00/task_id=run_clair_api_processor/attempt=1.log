@@ -1,0 +1,11 @@
+{"timestamp":"2025-09-26T23:21:04.171370","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-26T23:21:04.171811","level":"info","event":"Filling up the DagBag from /Users/adelson/airflow/dags/clair_api_processor.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-26T23:21:04.238365Z","level":"info","event":"🚀 Starting Clair API processing...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238446Z","level":"info","event":"📁 Input file: /Users/adelson/Documents/mai-thomas/data/combined_chats.csv","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238476Z","level":"info","event":"🔧 Mode: ssrl","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238497Z","level":"info","event":"🌍 Language: EN","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238515Z","level":"info","event":"📊 Groups: All","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238536Z","level":"info","event":"🌐 API URL: https://next-lab-test.bms.utwente.nl/chatBot/","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:21:04.238554Z","level":"info","event":"","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-26T23:22:19.537826Z","level":"error","event":"Server indicated the task shouldn't be running anymore. Terminating process","detail":{"detail":{"reason":"not_running","message":"TI is no longer in the running state and task should terminate","current_state":"failed"}},"logger":"task"}
+{"timestamp":"2025-09-26T23:22:24.552739Z","level":"error","event":"Task killed!","logger":"task"}
