@@ -36,21 +36,14 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-def extract_weather_data(**context):
-    """
-    Extract current weather data from OpenWeatherMap API
-    """
-    params = context['params']
-    city = params['city']
-    api_key = params['api_key']
-    
+def extract_weather_data(city, api_key):
+    """Extract current weather data from OpenWeatherMap API"""
     print(f"🌤️  Extraindo dados do clima para {city}...")
-    print(f"🔑 Usando API Key: {api_key[:8]}...")
     
     base_url = "http://api.openweathermap.org/data/2.5"
     current_url = f"{base_url}/weather"
     
-    request_params = {
+    params = {
         'q': city,
         'appid': api_key,
         'units': 'metric',
@@ -58,33 +51,22 @@ def extract_weather_data(**context):
     }
     
     try:
-        response = requests.get(current_url, params=request_params, timeout=10)
+        response = requests.get(current_url, params=params, timeout=10)
         response.raise_for_status()
         weather_data = response.json()
         
         print(f"✅ Dados extraídos com sucesso!")
-        print(f"📍 Cidade: {weather_data['name']}, {weather_data['sys']['country']}")
-        print(f"🌡️  Temperatura: {weather_data['main']['temp']:.1f}°C")
-        
-        # Store data in XCom for next task
         return weather_data
         
     except requests.exceptions.RequestException as e:
         print(f"❌ Erro ao extrair dados: {e}")
-        raise Exception(f"Falha na extração de dados: {e}")
+        raise
 
-def transform_weather_data(**context):
-    """
-    Transform raw weather data into readable format
-    """
-    # Get data from previous task
-    weather_data = context['task_instance'].xcom_pull(task_ids='extract_weather_data')
-    params = context['params']
-    
+def transform_weather_data(weather_data):
+    """Transform raw weather data into readable format"""
     print("🔄 Transformando dados...")
     
     try:
-        # Extract relevant information
         transformed = {
             'city': weather_data['name'],
             'country': weather_data['sys']['country'],
@@ -94,28 +76,18 @@ def transform_weather_data(**context):
             'pressure': weather_data['main']['pressure'],
             'description': weather_data['weather'][0]['description'].title(),
             'wind_speed': weather_data['wind']['speed'],
-            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'execution_date': context['ds']
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         
         print("✅ Dados transformados com sucesso!")
-        print(f"📊 Temperatura: {transformed['temperature']:.1f}°C")
-        print(f"💧 Umidade: {transformed['humidity']}%")
-        print(f"🌬️  Vento: {transformed['wind_speed']} m/s")
-        
         return transformed
         
     except KeyError as e:
         print(f"❌ Erro ao transformar dados: Campo {e} não encontrado")
-        raise Exception(f"Falha na transformação de dados: {e}")
+        raise
 
-def generate_html_report(**context):
-    """
-    Generate HTML report from transformed data
-    """
-    # Get data from previous task
-    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
-    
+def generate_html_report(data):
+    """Generate HTML report from transformed data"""
     print("📝 Gerando relatório HTML...")
     
     # Weather emoji mapping
@@ -195,7 +167,7 @@ def generate_html_report(**context):
             <div class="footer">
                 <p>Relatório gerado automaticamente pelo ETL Weather System</p>
                 <p>Dados fornecidos por OpenWeatherMap API</p>
-                <p>Execução: {data['execution_date']}</p>
+                <p>Execução: {context['ds']}</p>
             </div>
         </div>
     </body>
@@ -205,13 +177,11 @@ def generate_html_report(**context):
     print("✅ Relatório HTML gerado!")
     return html_content
 
-def send_weather_report(**context):
-    """
-    Send email with weather report using Airflow SMTP connection
-    """
-    params = context['params']
-    html_content = context['task_instance'].xcom_pull(task_ids='generate_html_report')
-    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
+def send_email(html_content, recipient_email, city, context):
+    """Send email with weather report using Airflow SMTP connection"""
+    print(f"📧 Enviando email para {recipient_email}...")
+    
+    subject = f"🌤️ Relatório do Clima - {city} - {context['ds']}"
     
     # Get SMTP connection from Airflow
     conn = BaseHook.get_connection('smtp_default')
@@ -222,24 +192,15 @@ def send_weather_report(**context):
     sender_email = conn.login
     sender_password = conn.password
     
-    # Email settings
-    recipient_email = params['recipient_email']
-    city = params['city']
-    
-    subject = f"🌤️ Relatório do Clima - {city} - {context['ds']}"
-    
-    print(f"📧 Enviando email para {recipient_email}...")
-    print(f"📎 Assunto: {subject}")
-    
-    # Create message
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = recipient_email
-    msg['Subject'] = subject
-    
-    msg.attach(MIMEText(html_content, 'html'))
-    
     try:
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        
+        msg.attach(MIMEText(html_content, 'html'))
+        
         # Connect to SMTP server
         if smtp_port == 465:
             # Use SSL for port 465
@@ -259,16 +220,41 @@ def send_weather_report(**context):
         server.quit()
         
         print("✅ Email enviado com sucesso!")
-        return f"Relatório do clima enviado para {recipient_email}"
         
     except Exception as e:
         print(f"❌ Erro ao enviar email: {str(e)}")
         raise Exception(f"Falha ao enviar email: {str(e)}")
 
-def etl_summary(**context):
-    """
-    Provide a summary of the ETL process
-    """
+# Airflow Task Functions
+def extract_task(**context):
+    """Airflow task wrapper for extract_weather_data"""
+    params = context['params']
+    weather_data = extract_weather_data(params['city'], params['api_key'])
+    return weather_data
+
+def transform_task(**context):
+    """Airflow task wrapper for transform_weather_data"""
+    weather_data = context['task_instance'].xcom_pull(task_ids='extract_weather_data')
+    transformed_data = transform_weather_data(weather_data)
+    return transformed_data
+
+def generate_report_task(**context):
+    """Airflow task wrapper for generate_html_report"""
+    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
+    html_content = generate_html_report(data)
+    return html_content
+
+def send_email_task(**context):
+    """Airflow task wrapper for send_email"""
+    params = context['params']
+    html_content = context['task_instance'].xcom_pull(task_ids='generate_html_report')
+    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
+    
+    send_email(html_content, params['recipient_email'], params['city'], context)
+    return f"Relatório do clima enviado para {params['recipient_email']}"
+
+def summary_task(**context):
+    """Provide a summary of the ETL process"""
     params = context['params']
     data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
     
@@ -315,31 +301,31 @@ with DAG(
     # Task 1: Extract weather data
     extract_task = PythonOperator(
         task_id='extract_weather_data',
-        python_callable=extract_weather_data
+        python_callable=extract_task
     )
 
     # Task 2: Transform data
     transform_task = PythonOperator(
         task_id='transform_weather_data',
-        python_callable=transform_weather_data
+        python_callable=transform_task
     )
 
     # Task 3: Generate HTML report
     generate_report_task = PythonOperator(
         task_id='generate_html_report',
-        python_callable=generate_html_report
+        python_callable=generate_report_task
     )
 
     # Task 4: Send email report
     send_email_task = PythonOperator(
         task_id='send_weather_report',
-        python_callable=send_weather_report
+        python_callable=send_email_task
     )
 
     # Task 5: Summary
     summary_task = PythonOperator(
         task_id='etl_summary',
-        python_callable=etl_summary
+        python_callable=summary_task
     )
 
     # Define task dependencies
