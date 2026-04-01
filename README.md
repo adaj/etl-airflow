@@ -6,15 +6,10 @@ Uma coleção de projetos ETL (Extract, Transform, Load) implementados com Apach
 
 ```
 dags/
-├── etl-weather/                 # 🌤️ Projetos ETL de clima
-│   ├── README.md               # 📖 Documentação específica
-│   ├── etl_example.py          # 🔥 Script standalone (Fire)
-│   └── etl_airflow_example.py  # 🚀 DAG do Airflow
-└── chat-processing/             # 💬 Processamento de chat
-    ├── README.md               # 📖 Documentação específica
-    ├── clair_api_processor.py  # 🔗 API Clair + Email
-    ├── prep_chats.py           # 📊 Preparação de dados
-    └── test_email_connection.py # 📧 Teste de email
+├── etl-weather/                  Projetos ETL de clima
+│   ├── README.md                Documentação específica
+│   ├── etl_example.py           Script standalone
+│   └── etl_airflow_example.py   
 ```
 
 ## 🚀 Quick Start
@@ -53,15 +48,11 @@ airflow standalone
 - **DAG Airflow:** `dags/etl-weather/etl_airflow_example.py`
 - **Funcionalidade:** Relatórios diários do clima via OpenWeatherMap API
 
-### 💬 **Chat Processing Pipeline**
-- **Pré-processamento:** `dags/chat-processing/prep_chats.py`
-- **API Processing:** `dags/chat-processing/clair_api_processor.py`
-- **Teste Email:** `dags/chat-processing/test_email_connection.py`
-- **Funcionalidade:** Processamento de conversas e integração com API externa
 
 ## ⚙️ Configuração Necessária
 
 ### Conexões do Airflow
+
 Configure na interface (Admin > Connections):
 
 **SMTP Connection:**
@@ -73,45 +64,9 @@ Configure na interface (Admin > Connections):
 - Password: `sua-app-password`
 - Extra: `{"smtp_starttls": true, "smtp_ssl": false}`
 
-### Variáveis de Ambiente
-```bash
-# Para ETL Weather
-export OPENWEATHER_API_KEY="sua_api_key"
+Configure na interface (Admin > Variables):
 
-# Para Chat Processing
-export CLAIR_URL="url_da_api_clair"
-export CLAIR_TOKEN="seu_token"
-```
+**Variables**
+- `owm_api_key`: Sua chave da API OpenWeatherMap.
+- `owm_city`: Cidade para extrair os dados do clima.
 
-## 📚 Documentação Detalhada
-
-- [ETL Weather Documentation](./dags/etl-weather/README.md)
-- [Chat Processing Documentation](./dags/chat-processing/README.md)
-- [Apache Airflow Documentation](https://airflow.apache.org/docs/)
-
-## 🔧 Troubleshooting
-
-### Problemas Comuns
-1. **Erro de dependências:** `pip install -r requirements.txt`
-2. **Problemas de email:** Use App Password do Gmail
-3. **Erro de ambiente:** Certifique-se de usar Python 3.10
-
-### Logs
-- Logs do Airflow: `~/airflow/logs/`
-- Logs específicos: Interface do Airflow > DAGs > [Nome do DAG] > Logs
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT.
-
----
-
-**Desenvolvido com ❤️ para demonstrar o poder do Apache Airflow em processos ETL!**
