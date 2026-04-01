@@ -9,63 +9,94 @@ This DAG demonstrates the same ETL process as etl_example.py but using Airflow f
 - Scheduling capabilities
 - Real-time monitoring and logging
 
-The DAG extracts weather data from OpenWeatherMap API, transforms it, and sends
-a beautiful HTML email report with weather information.
+The DAG extracts weather data from OpenWeatherMap API, transforms it, and:
+  1. Saves raw data to a CSV file (dags/etl-weather/weather_history.csv)
+  2. Sends a beautiful HTML email report with weather information.
+
+Configuration required in Airflow UI:
+  - Variable  : owm_api_key  → your OpenWeatherMap API key
+  - Connection: smtp_default → SMTP server settings for email delivery
+    (see project docs / notify_user message for exact field mapping)
 """
 
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.hooks.base import BaseHook
-from airflow.models.param import Param
-from datetime import datetime, timedelta
-import requests
-import json
+import csv
+import os
 import smtplib
+import ssl
+from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import ssl
 
+import requests
+from airflow import DAG
+from airflow.hooks.base import BaseHook
+from airflow.models import Variable
+from airflow.models.param import Param
+from airflow.operators.python import PythonOperator
+
+
+# ---------------------------------------------------------------------------
 # Default arguments for the DAG
+# ---------------------------------------------------------------------------
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2025, 1, 1),
-    'email_on_failure': True,
+    'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 2,
-    'retry_delay': timedelta(minutes=5),
+    'retries': 0,
+    # 'retry_delay': timedelta(minutes=5),
 }
 
-def extract_weather_data(city, api_key):
-    """Extract current weather data from OpenWeatherMap API"""
+# Path to the persistent CSV file inside the DAG folder
+CSV_PATH = os.path.join(os.path.dirname(__file__), 'weather_history.csv')
+
+# CSV column order
+CSV_FIELDNAMES = [
+    'timestamp',
+    'city',
+    'country',
+    'temperature',
+    'feels_like',
+    'humidity',
+    'pressure',
+    'wind_speed',
+    'description',
+]
+
+
+# ---------------------------------------------------------------------------
+# Core ETL functions
+# ---------------------------------------------------------------------------
+
+def extract_weather_data(city: str, api_key: str) -> dict:
+    """Extract current weather data from OpenWeatherMap API."""
     print(f"🌤️  Extraindo dados do clima para {city}...")
-    
-    base_url = "http://api.openweathermap.org/data/2.5"
-    current_url = f"{base_url}/weather"
-    
+
+    base_url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
         'q': city,
         'appid': api_key,
         'units': 'metric',
-        'lang': 'pt_br'
+        'lang': 'pt_br',
     }
-    
+
     try:
-        response = requests.get(current_url, params=params, timeout=10)
+        response = requests.get(base_url, params=params, timeout=10)
         response.raise_for_status()
         weather_data = response.json()
-        
-        print(f"✅ Dados extraídos com sucesso!")
+        print("✅ Dados extraídos com sucesso!")
         return weather_data
-        
+
     except requests.exceptions.RequestException as e:
         print(f"❌ Erro ao extrair dados: {e}")
         raise
 
-def transform_weather_data(weather_data):
-    """Transform raw weather data into readable format"""
+
+def transform_weather_data(weather_data: dict) -> dict:
+    """Transform raw weather data into a readable, flat dict."""
     print("🔄 Transformando dados...")
-    
+
     try:
         transformed = {
             'city': weather_data['name'],
@@ -76,21 +107,47 @@ def transform_weather_data(weather_data):
             'pressure': weather_data['main']['pressure'],
             'description': weather_data['weather'][0]['description'].title(),
             'wind_speed': weather_data['wind']['speed'],
-            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # The current-weather endpoint returns a snapshot (not hourly),
+            # so we record the full timestamp of when the data was captured.
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         }
-        
         print("✅ Dados transformados com sucesso!")
         return transformed
-        
+
     except KeyError as e:
         print(f"❌ Erro ao transformar dados: Campo {e} não encontrado")
         raise
 
-def generate_html_report(data):
-    """Generate HTML report from transformed data"""
+
+def save_to_csv(data: dict) -> str:
+    """Append transformed weather data to the persistent CSV file.
+
+    Returns the path of the CSV so it can be stored in XCom and referenced
+    by downstream tasks or external tools.
+    """
+    print(f"💾 Salvando dados no CSV: {CSV_PATH}")
+
+    file_exists = os.path.isfile(CSV_PATH)
+
+    with open(CSV_PATH, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
+
+        # Write header only when creating the file for the first time
+        if not file_exists:
+            writer.writeheader()
+
+        # Write only the columns defined in CSV_FIELDNAMES (drop any extras)
+        row = {field: data.get(field, '') for field in CSV_FIELDNAMES}
+        writer.writerow(row)
+
+    print(f"✅ Dados salvos! ({CSV_PATH})")
+    return CSV_PATH
+
+
+def generate_html_report(data: dict) -> str:
+    """Generate HTML report from transformed data."""
     print("📝 Gerando relatório HTML...")
-    
-    # Weather emoji mapping
+
     weather_emojis = {
         'clear': '☀️',
         'clouds': '☁️',
@@ -98,17 +155,16 @@ def generate_html_report(data):
         'snow': '❄️',
         'thunderstorm': '⛈️',
         'mist': '🌫️',
-        'fog': '🌫️'
+        'fog': '🌫️',
     }
-    
-    # Get appropriate emoji
+
     description_lower = data['description'].lower()
-    emoji = '🌤️'  # default
+    emoji = '🌤️'
     for key, value in weather_emojis.items():
         if key in description_lower:
             emoji = value
             break
-    
+
     html_content = f"""
     <!DOCTYPE html>
     <html>
@@ -136,7 +192,7 @@ def generate_html_report(data):
                 <p>Atualizado em: {data['timestamp']}</p>
                 <span class="airflow-badge">🚀 Powered by Apache Airflow</span>
             </div>
-            
+
             <div class="weather-info">
                 <div class="metric">
                     <span class="metric-label">🌡️ Temperatura:</span>
@@ -163,101 +219,118 @@ def generate_html_report(data):
                     <span class="metric-value">{data['description']}</span>
                 </div>
             </div>
-            
+
             <div class="footer">
                 <p>Relatório gerado automaticamente pelo ETL Weather System</p>
                 <p>Dados fornecidos por OpenWeatherMap API</p>
-                <p>Execução: {context['ds']}</p>
             </div>
         </div>
     </body>
     </html>
     """
-    
+
     print("✅ Relatório HTML gerado!")
     return html_content
 
-def send_email(html_content, recipient_email, city, context):
-    """Send email with weather report using Airflow SMTP connection"""
+
+def send_email(html_content: str, recipient_email: str, city: str, context: dict) -> None:
+    """Send email with weather report using the Airflow 'smtp_default' connection.
+
+    Connection setup (Admin → Connections → smtp_default):
+      Connection Type : Email  (or Generic)
+      Host            : smtp.gmail.com        (or your provider)
+      Login           : your-sender@gmail.com
+      Password        : your app-password
+      Port            : 587  (STARTTLS) or 465 (SSL)
+    """
     print(f"📧 Enviando email para {recipient_email}...")
-    
+
     subject = f"🌤️ Relatório do Clima - {city} - {context['ds']}"
-    
-    # Get SMTP connection from Airflow
+
     conn = BaseHook.get_connection('smtp_default')
-    
-    # Extract connection settings
     smtp_server = conn.host
-    smtp_port = conn.port
+    smtp_port = int(conn.port)
     sender_email = conn.login
     sender_password = conn.password
-    
+
     try:
-        # Create message
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = recipient_email
         msg['Subject'] = subject
-        
         msg.attach(MIMEText(html_content, 'html'))
-        
-        # Connect to SMTP server
+
         if smtp_port == 465:
-            # Use SSL for port 465
             print("Usando SSL direto (porta 465)...")
             context_ssl = ssl.create_default_context()
             server = smtplib.SMTP_SSL(smtp_server, smtp_port, context=context_ssl)
         else:
-            # Use STARTTLS for port 587
             print("Usando STARTTLS (porta 587)...")
             server = smtplib.SMTP(smtp_server, smtp_port)
             server.starttls()
-        
-        # Login and send
+
         server.login(sender_email, sender_password)
-        text = msg.as_string()
-        server.sendmail(sender_email, recipient_email, text)
+        server.sendmail(sender_email, recipient_email, msg.as_string())
         server.quit()
-        
+
         print("✅ Email enviado com sucesso!")
-        
+
     except Exception as e:
         print(f"❌ Erro ao enviar email: {str(e)}")
         raise Exception(f"Falha ao enviar email: {str(e)}")
 
-# Airflow Task Functions
+
+# ---------------------------------------------------------------------------
+# Airflow Task wrappers
+# ---------------------------------------------------------------------------
+
 def extract_task(**context):
-    """Airflow task wrapper for extract_weather_data"""
+    """Airflow task wrapper for extract_weather_data.
+
+    The API key is read from the Airflow Variable 'owm_api_key' so it never
+    needs to appear in the DAG code or in the UI trigger form.
+    """
     params = context['params']
-    weather_data = extract_weather_data(params['city'], params['api_key'])
+    api_key = Variable.get('owm_api_key')
+    weather_data = extract_weather_data(params['city'], api_key)
     return weather_data
 
+
 def transform_task(**context):
-    """Airflow task wrapper for transform_weather_data"""
+    """Airflow task wrapper for transform_weather_data."""
     weather_data = context['task_instance'].xcom_pull(task_ids='extract_weather_data')
     transformed_data = transform_weather_data(weather_data)
     return transformed_data
 
+
+def save_csv_task(**context):
+    """Airflow task wrapper for save_to_csv."""
+    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
+    csv_path = save_to_csv(data)
+    return csv_path
+
+
 def generate_report_task(**context):
-    """Airflow task wrapper for generate_html_report"""
+    """Airflow task wrapper for generate_html_report."""
     data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
     html_content = generate_html_report(data)
     return html_content
 
+
 def send_email_task(**context):
-    """Airflow task wrapper for send_email"""
+    """Airflow task wrapper for send_email."""
     params = context['params']
     html_content = context['task_instance'].xcom_pull(task_ids='generate_html_report')
-    data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
-    
     send_email(html_content, params['recipient_email'], params['city'], context)
     return f"Relatório do clima enviado para {params['recipient_email']}"
 
+
 def summary_task(**context):
-    """Provide a summary of the ETL process"""
+    """Provide a summary of the ETL process."""
     params = context['params']
     data = context['task_instance'].xcom_pull(task_ids='transform_weather_data')
-    
+    csv_path = context['task_instance'].xcom_pull(task_ids='save_weather_csv')
+
     print("=" * 60)
     print("ETL WEATHER REPORT SUMMARY")
     print("=" * 60)
@@ -266,67 +339,75 @@ def summary_task(**context):
     print(f"💧 Umidade: {data['humidity']}%")
     print(f"🌬️  Vento: {data['wind_speed']} m/s")
     print(f"☁️  Condições: {data['description']}")
+    print(f"💾 CSV salvo em: {csv_path}")
     print(f"📧 Email enviado para: {params['recipient_email']}")
     print(f"📅 Data de execução: {context['ds']}")
     print("=" * 60)
     print("🎉 Processo ETL concluído com sucesso!")
 
+
+# ---------------------------------------------------------------------------
 # DAG definition
+# ---------------------------------------------------------------------------
 with DAG(
     'etl_weather_report',
     default_args=default_args,
-    description='ETL process to extract weather data and send daily reports',
+    description='ETL process to extract weather data, save to CSV, and send daily reports',
     schedule='0 8 * * *',  # Run daily at 8 AM
     catchup=False,
     params={
         'city': Param(
-            'São Paulo',
+            'Natal',
             type='string',
-            description='City name for weather data (e.g., São Paulo, Rio de Janeiro)'
-        ),
-        'api_key': Param(
-            'your_openweather_api_key',
-            type='string',
-            description='OpenWeatherMap API key (get free at openweathermap.org)'
+            description='City name for weather data (e.g., São Paulo, Rio de Janeiro)',
         ),
         'recipient_email': Param(
-            'recipient@example.com',
+            '[EMAIL_ADDRESS]',
             type='string',
-            description='Email address to receive the weather report'
-        )
+            description='Email address to receive the weather report',
+        ),
     },
-    tags=['etl', 'weather', 'email', 'daily-report']
+    tags=['etl', 'weather', 'email', 'daily-report'],
 ) as dag:
 
     # Task 1: Extract weather data
-    extract_task = PythonOperator(
+    t_extract = PythonOperator(
         task_id='extract_weather_data',
-        python_callable=extract_task
+        python_callable=extract_task,
     )
 
     # Task 2: Transform data
-    transform_task = PythonOperator(
+    t_transform = PythonOperator(
         task_id='transform_weather_data',
-        python_callable=transform_task
+        python_callable=transform_task,
     )
 
-    # Task 3: Generate HTML report
-    generate_report_task = PythonOperator(
+    # Task 3: Save transformed data to CSV (Load step)
+    t_save_csv = PythonOperator(
+        task_id='save_weather_csv',
+        python_callable=save_csv_task,
+    )
+
+    # Task 4: Generate HTML report
+    t_generate_report = PythonOperator(
         task_id='generate_html_report',
-        python_callable=generate_report_task
+        python_callable=generate_report_task,
     )
 
-    # Task 4: Send email report
-    send_email_task = PythonOperator(
+    # Task 5: Send email report
+    t_send_email = PythonOperator(
         task_id='send_weather_report',
-        python_callable=send_email_task
+        python_callable=send_email_task,
     )
 
-    # Task 5: Summary
-    summary_task = PythonOperator(
+    # Task 6: Summary
+    t_summary = PythonOperator(
         task_id='etl_summary',
-        python_callable=summary_task
+        python_callable=summary_task,
     )
 
-    # Define task dependencies
-    extract_task >> transform_task >> generate_report_task >> send_email_task >> summary_task
+    # Task dependencies
+    # After transform, CSV save and report generation can run in parallel
+    t_extract >> t_transform >> [t_save_csv, t_generate_report]
+    t_generate_report >> t_send_email
+    [t_save_csv, t_send_email] >> t_summary

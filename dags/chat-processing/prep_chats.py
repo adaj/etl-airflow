@@ -13,10 +13,11 @@ def discover_csv_files(folder_path, **kwargs):
     """
     Discover all CSV files in the specified folder
     """
-    print(f"Discovering CSV files in folder: {folder_path}")
+    print(f"🔍 Discovering CSV files in folder: {folder_path}")
     
     # Check if folder exists
     if not os.path.exists(folder_path):
+        print(f"❌ Folder {folder_path} does not exist")
         raise ValueError(f"Folder {folder_path} does not exist")
     
     # Find all CSV files
@@ -24,11 +25,14 @@ def discover_csv_files(folder_path, **kwargs):
     csv_files = glob.glob(csv_pattern)
     
     if not csv_files:
+        print(f"❌ No CSV files found in folder: {folder_path}")
         raise ValueError(f"No CSV files found in folder: {folder_path}")
     
-    print(f"Found {len(csv_files)} CSV files:")
-    for file in csv_files:
-        print(f"  - {file}")
+    print(f"✅ Found {len(csv_files)} CSV files:")
+    for i, file in enumerate(sorted(csv_files), 1):
+        filename = Path(file).name
+        size = os.path.getsize(file)
+        print(f"  {i:2d}. {filename} ({size:,} bytes)")
     
     # Store the list of files in XCom for the next task
     return csv_files
@@ -54,23 +58,39 @@ def process_csv_files(csv_files, **kwargs):
         return []
     
     processed_files = []
+    failed_files = []
     
-    for csv_file in csv_files:
+    for i, csv_file in enumerate(csv_files, 1):
+        filename = Path(csv_file).name
+        print(f"\n--- Processing {i}/{len(csv_files)}: {filename} ---")
+        
         try:
             # Read CSV file
+            print(f"Reading CSV file: {csv_file}")
             df = pd.read_csv(csv_file)
+            print(f"Original shape: {df.shape[0]} rows, {df.shape[1]} columns")
+            print(f"Columns: {list(df.columns)}")
             
             # Skip empty dataframes
             if df.empty:
-                print(f"Skipping empty file: {csv_file}")
+                print(f"⚠️  SKIPPING EMPTY FILE: {filename}")
+                failed_files.append((filename, "Empty file"))
+                continue
+            
+            # Check for required columns
+            if 'text' not in df.columns:
+                print(f"⚠️  NO 'text' COLUMN: {filename}")
+                failed_files.append((filename, "No 'text' column"))
                 continue
             
             # Get filename without extension for group
-            filename = Path(csv_file).stem
+            group_name = Path(csv_file).stem
+            print(f"Group name: {group_name}")
             
             # Add group and username columns
-            df['group'] = filename
+            df['group'] = group_name
             df['username'] = df.apply(lambda x: 'SpeakerA' if hash(str(x)) % 2 == 0 else 'SpeakerB', axis=1)
+            print(f"Added group and username columns")
             
             # Create timestamp from end time and drop start/end columns
             if 'end' in df.columns:
@@ -78,13 +98,18 @@ def process_csv_files(csv_files, **kwargs):
                 df['timestamp'] = pd.to_datetime('2025-01-01 ' + df['end'].str.replace(',', '.'))
                 # Drop start and end columns
                 df = df.drop(['start', 'end'], axis=1, errors='ignore')
+                print(f"Created timestamp column from 'end' column")
+            else:
+                print(f"⚠️  No 'end' column found for timestamp creation")
             
             # PREPROCESSING: Remove consecutive duplicate text rows
+            original_rows = len(df)
             if 'text' in df.columns:
                 # Create a mask to identify consecutive duplicates
-                # Keep first occurrence of consecutive duplicates
                 df = df[df['text'] != df['text'].shift(1)]
-                print(f"Removed consecutive duplicate text rows from {filename}")
+                removed_rows = original_rows - len(df)
+                if removed_rows > 0:
+                    print(f"Removed {removed_rows} consecutive duplicate text rows")
             
             # Reorder columns to put group, username, and timestamp before text column
             if 'text' in df.columns:
@@ -92,19 +117,31 @@ def process_csv_files(csv_files, **kwargs):
                 other_cols = [col for col in df.columns if col not in ['group', 'username', 'timestamp', 'text']]
                 # Reorder: other columns, then group, username, timestamp, then text
                 df = df[other_cols + ['group', 'username', 'timestamp', 'text']]
+                print(f"Reordered columns: {list(df.columns)}")
             else:
                 # If no text column, just add group, username, and timestamp at the end
-                pass
+                print(f"⚠️  No 'text' column found for reordering")
             
             # Save processed file to temporary location
             temp_file = csv_file.replace('.csv', '_processed.csv')
             df.to_csv(temp_file, index=False)
             processed_files.append(temp_file)
-            print(f"Processed {filename}: {df.shape[0]} rows, {df.shape[1]} columns")
+            print(f"✅ SUCCESS: {filename} -> {df.shape[0]} rows, {df.shape[1]} columns")
+            print(f"Saved to: {temp_file}")
             
         except Exception as e:
-            print(f"Error processing {csv_file}: {str(e)}")
+            print(f"❌ ERROR processing {filename}: {str(e)}")
+            failed_files.append((filename, str(e)))
             continue
+    
+    print(f"\n📊 PROCESSING SUMMARY:")
+    print(f"✅ Successfully processed: {len(processed_files)} files")
+    print(f"❌ Failed to process: {len(failed_files)} files")
+    
+    if failed_files:
+        print(f"\n❌ FAILED FILES:")
+        for filename, reason in failed_files:
+            print(f"  - {filename}: {reason}")
     
     # Return processed file paths instead of dataframes
     return processed_files
@@ -245,11 +282,24 @@ def create_combined_csv_output(processed_files, output_folder, **kwargs):
         # Concatenate all dataframes
         combined_df = pd.concat(all_dataframes, ignore_index=True)
         
+        # CRITICAL FIX: Ensure unique index values for clair_api_tester.py
+        # The clair_api_tester.py uses index_col=0, so we need unique index values
+        if 'index' in combined_df.columns:
+            # Reset the index column to have unique values starting from 0
+            combined_df['index'] = range(len(combined_df))
+            print(f"✅ Fixed index column: Reset to unique values 0-{len(combined_df)-1}")
+        
         # Save to CSV
         combined_df.to_csv(csv_path, index=False)
         
         print(f"Combined CSV file created: {csv_path}")
         print(f"Total rows: {combined_df.shape[0]}, Total columns: {combined_df.shape[1]}")
+        
+        # Verify unique groups
+        if 'group' in combined_df.columns:
+            unique_groups = combined_df['group'].nunique()
+            print(f"Unique groups in combined CSV: {unique_groups}")
+            print(f"Group names: {sorted(combined_df['group'].unique())}")
         
         return csv_path
     else:

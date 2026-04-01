@@ -23,7 +23,7 @@ def extract_weather_data(city, api_key):
     """Extract current weather data from OpenWeatherMap API"""
     print(f"🌤️  Extraindo dados do clima para {city}...")
     
-    base_url = "http://api.openweathermap.org/data/2.5"
+    base_url = "https://api.openweathermap.org/data/2.5"
     current_url = f"{base_url}/weather"
     
     params = {
